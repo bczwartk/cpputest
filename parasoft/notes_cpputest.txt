@@ -1,0 +1,168 @@
+CppUTest
+========
+
+
+Installation
+------------
+Starting point: http://cpputest.github.io/
+Install:
+ apt-get install cpputest
+---
+proserve@HOUND2:~/work/support/91534$ sudo apt-get install cpputest
+Reading package lists... Done
+Building dependency tree
+Reading state information... Done
+The following packages were automatically installed and are no longer required:
+  cpp-9-aarch64-linux-gnu cpp-9-arm-linux-gnueabi cpp-aarch64-linux-gnu
+  cpp-arm-linux-gnueabi gcc-10-cross-base gcc-9-aarch64-linux-gnu-base
+  gcc-9-arm-linux-gnueabi-base gcc-9-cross-base libasan5-arm64-cross
+  libasan5-armel-cross libatomic1-arm64-cross libatomic1-armel-cross
+  libc6-arm64-cross libc6-armel-cross libc6-dev-arm64-cross libc6-dev-armel-cross
+  libgcc-9-dev-arm64-cross libgcc-9-dev-armel-cross libgcc-s1-arm64-cross
+  libgcc-s1-armel-cross libgomp1-arm64-cross libgomp1-armel-cross
+  libitm1-arm64-cross liblsan0-arm64-cross libstdc++-9-dev-arm64-cross
+  libstdc++-9-dev-armel-cross libstdc++6-arm64-cross libstdc++6-armel-cross
+  libtsan0-arm64-cross libubsan1-arm64-cross libubsan1-armel-cross
+  linux-libc-dev-arm64-cross linux-libc-dev-armel-cross
+Use 'sudo apt autoremove' to remove them.
+The following additional packages will be installed:
+  libcpputest-dev
+Suggested packages:
+  ruby | ruby-interpreter
+The following NEW packages will be installed:
+  cpputest libcpputest-dev
+0 upgraded, 2 newly installed, 0 to remove and 505 not upgraded.
+Need to get 195 kB of archives.
+After this operation, 1594 kB of additional disk space will be used.
+Do you want to continue? [Y/n] Y
+Get:1 http://archive.ubuntu.com/ubuntu focal/universe amd64 libcpputest-dev amd64 3.8-7 [156 kB]
+Get:2 http://archive.ubuntu.com/ubuntu focal/universe amd64 cpputest all 3.8-7 [38.2 kB]
+Fetched 195 kB in 0s (681 kB/s)
+Selecting previously unselected package libcpputest-dev:amd64.
+(Reading database ... 81731 files and directories currently installed.)
+Preparing to unpack .../libcpputest-dev_3.8-7_amd64.deb ...
+Unpacking libcpputest-dev:amd64 (3.8-7) ...
+Selecting previously unselected package cpputest.
+Preparing to unpack .../cpputest_3.8-7_all.deb ...
+Unpacking cpputest (3.8-7) ...
+Setting up libcpputest-dev:amd64 (3.8-7) ...
+Setting up cpputest (3.8-7) ...
+---
+
+
+Clone CppUTest
+--------------
+CppUTest: http://cpputest.github.io/ 
+The original repo:
+    git clone https://github.com/cpputest/cpputest.git
+or my clone for experiments (branch cpptest_cpputest):
+    git clone https://github.com/bczwartk/cpputest.git
+
+
+Build CppUTest
+--------------
+mkdir build_cpputest
+cmake -S cpputest -B build_cpputest
+cd build_cpputest/
+make
+
+
+Run tests
+---------
+./examples/AllTests/ExampleTests
+./examples/AllTests/ExampleTests -v
+
+
+Configure C/C++test stuff
+-------------------------
+CppUTest integration docs:
+https://docs.parasoft.com/display/CPPTEST20212/Integrating+with+CppUnit+and+CppUtest#IntegratingwithCppUnitandCppUtest-InstallingC/C++testintoCppUtestSetup
+
+Installation and CppUTest extension files
+ls /home/proserve/parasoft/cpptest-std-2022.2.0/runtime/include/cpptest/extensions/cpputest/
+
+Build runtime library
+    cd /home/proserve/parasoft/cpptest-std-2022.2.0/runtime/
+    ls
+    make
+    ls -l build/cpptest.o
+    nm build/cpptest.o  | grep CppTest_TestStop
+
+
+Use dedicated branch for experiments
+------------------------------------
+cd ../cpputest/
+git checkout -b cpptest_cpputest
+
+Necessary changes
+* in cpputest/examples/AllTests/AllTests.cpp
+  * add extra includes
+  * redefine main()
+* in cpputest/examples/AllTests/CMakeLists.txt
+  * add PARASOFT_CPPTEST define
+  * add include to runtime
+  * add runtime library cpptest.o
+
+
+Build and run tests
+-------------------
+rm -rf build_cpputest && mkdir build_cpputest && cmake -S cpputest -B build_cpputest && make -C build_cpputest clean all
+rm -rf build_cpputest *.clog *.utlog && mkdir build_cpputest && cmake -S cpputest -B build_cpputest && make -C build_cpputest clean all && ./build_cpputest/examples/AllTests/ExampleTests -v
+
+Results:
+---
+proserve@HOUND2:~/work/support/91534$ ls -l
+total 32
+drwxr-xr-x  9 proserve proserve 4096 Jan 13 16:04 build_cpputest
+-rw-r--r--  1 proserve proserve 2333 Jan 13 16:05 cpptest_results.clog
+-rw-r--r--  1 proserve proserve 4162 Jan 13 16:05 cpptest_results.utlog
+...
+---
+but no C/C++test coverage maps because C/C++test coverage is not integrated yet.
+
+
+Build and run tests with C/C++test coverage extension CMake
+-----------------------------------------------------------
+Added C/C++test Std CMake extension to cpputest/CMakeLists.txt
+
+export CPPTEST_HOME=/home/proserve/parasoft/cpptest-std-2022.2.0
+rm -rf build_cpputest  *.clog *.utlog && mkdir build_cpputest && cmake -S cpputest -B build_cpputest -DCPPTEST_COVERAGE=ON && make -C build_cpputest clean all && ./build_cpputest/examples/AllTests/ExampleTests -v
+---
+proserve@HOUND2:~/work/support/91534$ find . -name '*.clog' -exec ls -l '{}' \;
+-rw-r--r-- 1 proserve proserve 194 Jan 13 16:00 ./orig/cpptest_results.clog
+-rw-r--r-- 1 proserve proserve 74127 Jan 13 16:22 ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog
+---
+proserve@HOUND2:~/work/support/91534$ find . -name '.cpptest'
+./build_cpputest/cpptest-coverage/CppUTest/.cpptest
+---
+
+
+Run C/C++test to generate reports
+---------------------------------
+Run C/C++test Standard:
+$CPPTEST_HOME/cpptestcli -showdetails -workspace ./build_cpputest/cpptest-coverage/CppUTest -input ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog -input cpptest_results.utlog  -module cpputest -config 'builtin://Unit Testing'  -report reports
+---
+Static analysis violations: 0
+Unit tests failures: 0
+Executed test cases: 42
+  Passed: 42
+  Failed: 0
+  Skipped: 0
+Line Coverage: 1796/15743 lines (11% covered)
+---
+
+The custom test config works as well:
+rm -rf reports && $CPPTEST_HOME/cpptestcli -showdetails -workspace ./build_cpputest/cpptest-coverage/CppUTest -input ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog -input cpptest_results.utlog  -module cpputest -config orig/Unit\ Tests.properties  -report reports 2>&1 | tee output.txt
+
+
+TODO
+----
+* Exclude CppUTest implementation sources from reports.
+* Add execution and coverage for other examples.
+* Automate the whole thing in a single script.
+
+
+
+
+
+
