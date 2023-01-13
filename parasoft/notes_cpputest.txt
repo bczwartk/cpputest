@@ -151,15 +151,18 @@ Executed test cases: 42
 Line Coverage: 1796/15743 lines (11% covered)
 ---
 
-The custom test config works as well:
-rm -rf reports && $CPPTEST_HOME/cpptestcli -showdetails -workspace ./build_cpputest/cpptest-coverage/CppUTest -input ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog -input cpptest_results.utlog  -module cpputest -config orig/Unit\ Tests.properties  -report reports 2>&1 | tee output.txt
+
+Automation
+----------
+See parasoft/run_cpptest.sh.
+Run it *outside* of cpputest/, e.g.
+    ./cpputest/parasoft/run_cpputest.sh 2>&1 | tee output.txt
 
 
 TODO
 ----
 * Exclude CppUTest implementation sources from reports.
 * Add execution and coverage for other examples.
-* Automate the whole thing in a single script.
 
 
 
