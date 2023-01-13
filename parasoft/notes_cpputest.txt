@@ -159,11 +159,13 @@ Run it *outside* of cpputest/, e.g.
     ./cpputest/parasoft/run_cpputest.sh 2>&1 | tee output.txt
 
 
+Add execution and coverage for other examples
+---------------------------------------------
+Nice - we have 98% coverage:
+
 TODO
 ----
-* Exclude CppUTest implementation sources from reports.
-* Add execution and coverage for other examples.
-
+* Exclude CppUTest implementation sources from reports
 
 
 
