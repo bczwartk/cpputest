@@ -1,7 +1,5 @@
 
 
-set(CPPTEST_HOME /home/proserve/parasoft/cpptest-std-2022.2.0)
-
 add_executable(ExampleTests
     AllTests.cpp
     CircularBufferTest.cpp

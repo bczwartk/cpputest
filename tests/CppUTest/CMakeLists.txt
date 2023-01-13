@@ -43,6 +43,10 @@ if(CPPUTEST_STD_C_LIB_DISABLED)
     )
 endif()
 
+target_include_directories(CppUTestTests
+    PRIVATE ${CPPTEST_HOME}/runtime/include
+)
+
 target_link_libraries(CppUTestTests PRIVATE CppUTest)
 
 add_mapfile(CppUTestTests)

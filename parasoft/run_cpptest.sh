@@ -25,6 +25,7 @@ make -C ./build_cpputest clean all
 
 # C/C++test data check
 ls -l ./cpptest_results.utlog
+ls -l ./build_cpputest/examples/AllTests/cpptest_results.utlog
 ls -l ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog 
 ls -alrt ./build_cpputest/cpptest-coverage/CppUTest/.cpptest/
 
@@ -35,6 +36,7 @@ $CPPTEST_HOME/cpptestcli \
     -workspace ./build_cpputest/cpptest-coverage/CppUTest \
     -input ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog \
     -input ./cpptest_results.utlog \
+    -input ./build_cpputest/examples/AllTests/cpptest_results.utlog \
     -module ./cpputest \
     -config "builtin://Unit Testing" \
     -report ./reports

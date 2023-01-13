@@ -12,6 +12,7 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 # be ready to enable C/C++test coverage if needed
 if(CPPTEST_COVERAGE)
+  set(CPPTEST_HOME /home/proserve/parasoft/cpptest-std-2022.2.0)
   include(cpptest-std-cmake/cpptest-coverage.cmake)
 # include(cpptest-pro-cmake/cpptest-coverage.cmake)
 endif()
