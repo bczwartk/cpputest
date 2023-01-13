@@ -1,0 +1,25 @@
+# Auto-generated from parasoft.in
+project.path=/@CPPTEST_PROJECT_NAME@
+
+# compiler configuration
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.family.linux.x86=@CPPTEST_COMPILER_ID@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.family.win32.x86=@CPPTEST_COMPILER_ID@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.command.c.linux.x86=@CMAKE_C_COMPILER@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.command.c.win32.x86=@CMAKE_C_COMPILER@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.command.cpp.linux.x86=@CMAKE_CXX_COMPILER@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.command.cpp.win32.x86=@CMAKE_CXX_COMPILER@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.options.linux.x86=${cpptest\:original_options} -DPARASOFT_CPPTEST
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.compiler.options.win32.x86=${cpptest\:original_options} -DPARASOFT_CPPTEST
+
+# linker configuration
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.linker.command.linux.x86=@CMAKE_CXX_COMPILER@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.linker.command.win32.x86=@CMAKE_CXX_COMPILER@
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.linker.options.linux.x86=${cpptest\:original_options}
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.linker.options.win32.x86=${cpptest\:original_options}
+
+# build options configuration
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.extractor.id=options_dir_extractor_id
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.checkers.api.cpp.options.ode_options_dir=@CPPTEST_BDF@
+
+# data source portable configuration mode
+/@CPPTEST_PROJECT_NAME@//com.parasoft.xtest.testcases.cpp.datasources.portable=true

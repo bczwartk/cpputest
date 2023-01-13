@@ -7,8 +7,14 @@ project(CppUTest
   VERSION 4.0
 )
 
+# set CMake to be verbose during build
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
+# be ready to enable C/C++test coverage if needed
+if(CPPTEST_COVERAGE)
+  include(cpptest-std-cmake/cpptest-coverage.cmake)
+# include(cpptest-pro-cmake/cpptest-coverage.cmake)
+endif()
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.21")
   # PROJECT_IS_TOP_LEVEL is defined automatically

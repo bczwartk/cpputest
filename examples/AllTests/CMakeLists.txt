@@ -28,8 +28,8 @@ target_link_libraries(ExampleTests
     PRIVATE
         ApplicationLib
         CppUTest::CppUTestExt
-        ${CPPTEST_HOME}/runtime/build/cpptest.o
 )
+#         ${CPPTEST_HOME}/runtime/build/cpptest.o
 
 if(CPPUTEST_TEST_DISCOVERY OR NOT DEFINED CPPUTEST_TEST_DISCOVERY)
     include(CppUTest)
