@@ -20,6 +20,8 @@ make -C ./build_cpputest clean all
 
 # run examples
 ./build_cpputest/examples/AllTests/ExampleTests -v
+./build_cpputest/tests/CppUTest/CppUTestTests -v
+./build_cpputest/tests/CppUTestExt/CppUTestExtTests -v
 
 # C/C++test data check
 ls -l ./cpptest_results.utlog
