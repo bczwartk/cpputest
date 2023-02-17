@@ -39,9 +39,21 @@ $CPPTEST_HOME/cpptestcli \
     -input ./build_cpputest/examples/AllTests/cpptest_results.utlog \
     -module ./cpputest \
     -config "builtin://Unit Testing" \
+    -property dtp.project=CppUTest \
     -report ./reports \
     $*
 ls -lart ./reports
+
+# run Pro to generate coverage overviews
+$HOME/parasoft/cpptest-pro-2022.2.0/cpptestcli \
+    -data cpptest-coverage/workspace/ \
+    -resource CppUTest \
+    -config 'builtin://Load Application Coverage' \
+    -showdetails -appconsole stdout \
+    -report reports \
+    -settings ./cpputest/parasoft/cpptest.properties \
+    -property dtp.project=CppUTest \
+    $*
 
 popd
 
