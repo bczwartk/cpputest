@@ -12,9 +12,10 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 set(CMAKE_VERBOSE_MAKEFILE ON)
 # be ready to enable C/C++test coverage if needed
 if(CPPTEST_COVERAGE)
-  set(CPPTEST_HOME /home/proserve/parasoft/cpptest-std-2022.2.0)
-  include(cpptest-std-cmake/cpptest-coverage.cmake)
-# include(cpptest-pro-cmake/cpptest-coverage.cmake)
+#   set(CPPTEST_HOME /home/proserve/parasoft/cpptest-std-2022.2.0)
+#   include(cpptest-std-cmake/cpptest-coverage.cmake)
+  set(CPPTEST_HOME /home/proserve/parasoft/cpptest-pro-2022.2.0)
+  include(cpptest-pro-cmake/cpptest-coverage.cmake)
 endif()
 
 if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.21")
@@ -137,13 +138,21 @@ add_subdirectory(src)
 target_include_directories(CppUTest
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
-        ${CPPTEST_HOME}/runtime/include
 )
 target_compile_definitions(CppUTest
   PUBLIC
     HAVE_CONFIG_H
+)
+if (CPPTEST_COVERAGE)
+target_include_directories(CppUTest
+    PUBLIC
+        ${CPPTEST_HOME}/bin/engine/coverage/runtime/include
+)
+target_compile_definitions(CppUTest
+  PUBLIC
     PARASOFT_CPPTEST=1
 )
+endif ()
 
 if (CPPUTEST_BUILD_TESTING)
     add_subdirectory(tests)
