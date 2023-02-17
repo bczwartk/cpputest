@@ -1,0 +1,13 @@
+cpptestcc.functionCoverage true
+cpptestcc.statementCoverage true
+cpptestcc.blockCoverage true
+# path cov is heavy!
+cpptestcc.pathCoverage true
+cpptestcc.decisionCoverage true
+cpptestcc.simpleConditionCoverage true
+cpptestcc.mcdcCoverage true
+cpptestcc.callCoverage true
+
+cpptestcc.templateCoverage true
+
+
