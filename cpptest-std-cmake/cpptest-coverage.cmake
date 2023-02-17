@@ -82,7 +82,6 @@ function (cpptest_enable_coverage)
   set(CPPTEST_CPPTESTCC_OPTS
       -workspace "${CPPTEST_COVERAGE_WORKSPACE}"
       -compiler ${CPPTEST_COMPILER_ID}
-      ${CPPTEST_COVERAGE_TYPE_FLAGS}
       -psrc ${CMAKE_CURRENT_LIST_DIR}/cpptestcc.psrc
       -exclude "regex:*"
       -include "regex:${CPPTEST_SOURCE_DIR}/*"
