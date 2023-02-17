@@ -31,9 +31,12 @@
 #include "CppUTestExt/IEEE754ExceptionsPlugin.h"
 #include "CppUTestExt/MockSupportPlugin.h"
 
+#ifdef PARASOFT_CPPTEST 
 #include "cpptest/extensions/cpputest/results_listener.h"
 #include "cpptest/extensions/cpputest/coverage_annotator.h"
 #include "cpptest/extensions/cpputest/test_runner.h"
+#endif /* PARASOFT_CPPTEST  */
+
 
 class MyDummyComparator : public MockNamedValueComparator
 {
@@ -51,7 +54,15 @@ public:
 
 int main(int ac, char** av)
 {
-#ifndef PARASOFT_CPPTEST 
+#ifdef PARASOFT_CPPTEST 
+    // Register C++Test cpputest plugins
+    TestRegistry* registry = TestRegistry::getCurrentRegistry();
+    TestPlugin* coverageAnnotator = new CppTest_CppUtestCoverageAnnotator();
+    registry->installPlugin(coverageAnnotator);
+    TestPlugin* resultsListener = new CppTest_CppUtestResultsListener();
+    registry->installPlugin(resultsListener);
+#endif /* PARASOFT_CPPTEST  */
+
     MyDummyComparator dummyComparator;
     MockSupportPlugin mockPlugin;
     IEEE754ExceptionsPlugin ieee754Plugin;
@@ -59,22 +70,15 @@ int main(int ac, char** av)
     mockPlugin.installComparator("MyDummyType", dummyComparator);
     TestRegistry::getCurrentRegistry()->installPlugin(&mockPlugin);
     TestRegistry::getCurrentRegistry()->installPlugin(&ieee754Plugin);
-    return CommandLineTestRunner::RunAllTests(ac, av);
-#else
-    // Register C++Test cpputest plugins
-    TestRegistry* registry = TestRegistry::getCurrentRegistry();
-    TestPlugin* coverageAnnotator = new CppTest_CppUtestCoverageAnnotator();
-    registry->installPlugin(coverageAnnotator);
-    TestPlugin* resultsListener = new CppTest_CppUtestResultsListener();
-    registry->installPlugin(resultsListener);
 
     int ret = CommandLineTestRunner::RunAllTests(ac, av);
 
+#ifdef PARASOFT_CPPTEST 
     delete coverageAnnotator;
     delete resultsListener;
+#endif /* PARASOFT_CPPTEST  */
 
     return ret;
-#endif
 }
 
 #include "AllTests.h"
