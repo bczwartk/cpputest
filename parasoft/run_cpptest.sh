@@ -39,7 +39,8 @@ $CPPTEST_HOME/cpptestcli \
     -input ./build_cpputest/examples/AllTests/cpptest_results.utlog \
     -module ./cpputest \
     -config "builtin://Unit Testing" \
-    -report ./reports
+    -report ./reports \
+    $*
 ls -lart ./reports
 
 popd
