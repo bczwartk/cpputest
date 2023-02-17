@@ -16,7 +16,7 @@ git clone https://github.com/bczwartk/cpputest.git -b cpptest_cpputest
 # build CppUTest and examples
 mkdir ./build_cpputest
 cmake -S cpputest -B ./build_cpputest -DCPPTEST_COVERAGE=ON
-make -C ./build_cpputest clean all
+make -C ./build_cpputest -j4 clean all
 
 # run examples
 ./build_cpputest/examples/AllTests/ExampleTests -v
