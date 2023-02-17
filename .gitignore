@@ -103,3 +103,4 @@ generated/
 
 # Builds
 /cpputest_build/
+/sandbox/

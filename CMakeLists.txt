@@ -137,10 +137,12 @@ add_subdirectory(src)
 target_include_directories(CppUTest
     PUBLIC
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}>
+        ${CPPTEST_HOME}/runtime/include
 )
 target_compile_definitions(CppUTest
   PUBLIC
     HAVE_CONFIG_H
+    PARASOFT_CPPTEST=1
 )
 
 if (CPPUTEST_BUILD_TESTING)
