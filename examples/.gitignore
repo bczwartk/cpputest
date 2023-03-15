@@ -1,0 +1,5 @@
+.cpptest/
+build_cpputest/
+cpptest-runtime/
+cpptest_results.clog
+reports/
