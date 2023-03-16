@@ -45,7 +45,7 @@ rm -f ./cpptest_results.clog
 
 # instrument for coverage and run tests 
 # - prefix compiler with cpptestcc command line - this will instrument for coverage
-# - add C/C++test runtime library to linker command line to add coverage API implementation
+# - add C/C++test runtime library to linker command line to add coverage API implementation;
 #   try LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS, or "+= ${CPPTEST_RT_LIB} in the makefile;
 #   for this project setting LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS simply works
 make clean all SILENCE= CPPUTEST_EXE_FLAGS=-v \
@@ -61,27 +61,7 @@ ls -l ./cpptest_results.utlog
 
 
 # generate report with coverage and CppUTest results
-# note: this required C/C++test Standard
-
-# theory...
-if [ ! false ] ; then
-# generate reports
-# rm -rf ./reports
-$CPPTEST_STD_HOME/cpptestcli \
-    -showdetails \
-    -workspace ${CPPTESTCC_WORKSPACE} \
-    -input ./build_cpputest/cpptest-coverage/CppUTest/CppUTest.clog \
-    -input ./cpptest_results.utlog \
-    -input ./build_cpputest/examples/AllTests/cpptest_results.utlog \
-    -module ./cpputest \
-    -config "builtin://Unit Testing" \
-    -property dtp.project=CppUTest \
-    -report ./reports \
-    $*
-ls -lart ./reports
-fi
-
-# ... and practice
+# note: this requires C/C++test Standard
 # note: C/C++test Standard can only report line coverage
 rm -rf ./reports
 $CPPTEST_STD_HOME/cpptestcli \
@@ -90,10 +70,14 @@ $CPPTEST_STD_HOME/cpptestcli \
     -input ./cpptest_results.clog \
     -module . \
     -config "builtin://Unit Testing" \
-    -property dtp.project=CppUTest \
-    -report ./reports \
-    $*
+    -property dtp.project=CppUTestExamples \
+    -report ./reports
 ls -lart ./reports
+
+
+# generate advanced coverage reports
+# note: this requires C/C++test Professional and Eclipse project
+# note: this will *not* generate CppUTest test reports (see Standard above)
 
 
 # TODO:
