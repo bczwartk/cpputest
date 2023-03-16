@@ -24,15 +24,16 @@ CPPTESTCC_FLAGS="-psrc `pwd`/cpptestcc.psrc -workspace ${CPPTESTCC_WORKSPACE}"
 
 
 # prepare C/C++test runtime library for coverage if not available yet
-CPPTEST_RT_LIB=./cpptest-runtime/build/cpptest.o
-if [ ! -d ./cpptest-runtime ] ; then
-  cp -r ${CPPTEST_STD_HOME}/runtime ./cpptest-runtime
-  # cp -r ${CPPTEST_PRO_HOME}/bin/engine/coverage/runtime ./cpptest-runtime
+CPPTEST_RT=`pwd`/cpptest-runtime
+CPPTEST_RT_LIB=${CPPTEST_RT}/build/cpptest.o
+if [ ! -d ${CPPTEST_RT} ] ; then
+    cp -r ${CPPTEST_STD_HOME}/runtime ${CPPTEST_RT}
+    # cp -r ${CPPTEST_PRO_HOME}/bin/engine/coverage/runtime ${CPPTEST_RT}
 fi
 if [ ! -f ${CPPTEST_RT_LIB} ] ; then
-  pushd ./cpptest-runtime
-  make
-  popd
+    pushd ${CPPTEST_RT}
+    make
+    popd
 fi
 ls -l ${CPPTEST_RT_LIB}
 
@@ -47,11 +48,17 @@ rm -f ./cpptest_results.clog
 # - prefix compiler with cpptestcc command line - this will instrument for coverage
 # - add C/C++test runtime library to linker command line to add coverage API implementation;
 #   try LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS, or "+= ${CPPTEST_RT_LIB} in the makefile;
-#   for this project setting LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS simply works
-make clean all SILENCE= CPPUTEST_EXE_FLAGS=-v \
-  CC="${CPPTESTCC} ${CPPTESTCC_FLAGS} -- gcc" \
-  CXX="${CPPTESTCC} ${CPPTESTCC_FLAGS} -- g++" \
-  CPPUTEST_ADDITIONAL_LDFLAGS=${CPPTEST_RT_LIB}
+#   for this project setting LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS simply works;
+#   see also ../build/MakefileWorker.mk for non-intrusive ways to add extra options to the build
+# - add flags to enable C/C++test Standard unit test listener;
+#   note: do not touch CPPUTEST_CPPFLAGS, we cannot override it here as it has some CppUTest flags
+make clean all \
+    SILENCE= CPPUTEST_EXE_FLAGS=-v \
+    CC="${CPPTESTCC} ${CPPTESTCC_FLAGS} -- gcc" \
+    CXX="${CPPTESTCC} ${CPPTESTCC_FLAGS} -- g++" \
+    CPPUTEST_ADDITIONAL_LDFLAGS=${CPPTEST_RT_LIB} \
+    CPPUTEST_CFLAGS="-DPARASOFT_CPPTEST=1 -I${CPPTEST_RT}/include" \
+    CPPUTEST_CXXFLAGS="-DPARASOFT_CPPTEST=1 -I${CPPTEST_RT}/include" \
 
 
 # the result will be a new coverage cache and runtime coverage data from the tests (.clog file)
@@ -63,16 +70,19 @@ ls -l ./cpptest_results.utlog
 # generate report with coverage and CppUTest results
 # note: this requires C/C++test Standard
 # note: C/C++test Standard can only report line coverage
-rm -rf ./reports
-$CPPTEST_STD_HOME/cpptestcli \
-    -showdetails \
-    -workspace ${CPPTESTCC_WORKSPACE} \
-    -input ./cpptest_results.clog \
-    -module . \
-    -config "builtin://Unit Testing" \
-    -property dtp.project=CppUTestExamples \
-    -report ./reports
-ls -lart ./reports
+if [ -f ./cpptest_results.clog ] ; then
+    rm -rf ./reports
+    $CPPTEST_STD_HOME/cpptestcli \
+        -showdetails \
+        -workspace ${CPPTESTCC_WORKSPACE} \
+        -input ./cpptest_results.clog \
+        -input ./cpptest_results.utlog \
+        -module . \
+        -config "builtin://Unit Testing" \
+        -property dtp.project=CppUTestExamples \
+        -report ./reports
+    ls -lart ./reports
+fi
 
 
 # generate advanced coverage reports
@@ -85,7 +95,9 @@ ls -lart ./reports
 # + create C/C++test runtime library if needed
 # + instrument builds with cpptestcc
 # + generate coverage reports with C/C++test Standard
-# - generate unit test reports with C/C++test Standard
+# + generate unit test reports with C/C++test Standard
+#   + add C/C++test test listener to the unit tests (enabled via #ifdef's)
+#   + enable C/C++test test listener during the build
 # - collect coverage from application code (exclusions)
 # - generate reports for advanced coverage metrics with C/C++test Professional
 # - send results to DTP
