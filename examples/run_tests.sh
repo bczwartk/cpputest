@@ -1,7 +1,10 @@
 #!/bin/bash -x
 
-# assumes that CppUTest library was already built and is available in ../lib
-# see ../parasoft/build_cpputest.sh
+# Script to perform make-based build and run of CppUTest examples
+# and to generate C/C++test coverage reports.
+# It should be run in cpputest/examples folder.
+# Assumes that CppUTest library was already built and is available in ../lib.
+# See ../parasoft/build_cpputest.sh.
 
 
 # common variables
@@ -71,8 +74,8 @@ ls -l ./cpptest_results.utlog
 # note: this requires C/C++test Standard
 # note: C/C++test Standard can only report line coverage
 if [ -f ./cpptest_results.clog ] ; then
-    rm -rf ./reports
-    $CPPTEST_STD_HOME/cpptestcli \
+    rm -rf ./reports_std
+    ${CPPTEST_STD_HOME}/cpptestcli \
         -showdetails \
         -workspace ${CPPTESTCC_WORKSPACE} \
         -input ./cpptest_results.clog \
@@ -80,14 +83,31 @@ if [ -f ./cpptest_results.clog ] ; then
         -module . \
         -config "builtin://Unit Testing" \
         -property dtp.project=CppUTestExamples \
-        -report ./reports
-    ls -lart ./reports
+        -report ./reports_std
+    ls -lart ./reports_std
 fi
 
 
 # generate advanced coverage reports
 # note: this requires C/C++test Professional and Eclipse project
 # note: this will *not* generate CppUTest test reports (see Standard above)
+if [ -f ./cpptest_results.clog ] ; then
+    # Eclipse workspace must be outside of the project folder (where .project is located)
+    DATA_DIR=`pwd`/../cpptest_wksp
+    rm -rf ${DATA_DIR}
+    rm -rf ./reports_pro
+    ${CPPTEST_PRO_HOME}/cpptestcli \
+        -data ${DATA_DIR} \
+        -import `pwd` \
+        -config 'builtin://Load Application Coverage' \
+        -showdetails -appconsole stdout \
+        -report reports_pro \
+        -settings `pwd`/../parasoft/cpptest.properties \
+        -property dtp.project=CppUTest
+    ls -lart ./reports_pro
+fi
+
+
 
 
 # TODO:
@@ -98,7 +118,7 @@ fi
 # + generate unit test reports with C/C++test Standard
 #   + add C/C++test test listener to the unit tests (enabled via #ifdef's)
 #   + enable C/C++test test listener during the build
-# - collect coverage from application code (exclusions)
+# + collect coverage from application code only (exclusions)
 # - generate reports for advanced coverage metrics with C/C++test Professional
 # - send results to DTP
 # - add another folder with more CppUTests build as a separate executable

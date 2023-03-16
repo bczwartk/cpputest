@@ -1,5 +1,9 @@
+*.clog
+*.clog
 .cpptest/
 build_cpputest/
 cpptest-runtime/
-cpptest_results.clog
 reports/
+reports_pro/
+reports_std/
+build/

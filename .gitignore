@@ -104,3 +104,4 @@ generated/
 # Builds
 /cpputest_build/
 /sandbox/
+/cpptest_wksp/
