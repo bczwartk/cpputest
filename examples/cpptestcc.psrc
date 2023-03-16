@@ -1,0 +1,26 @@
+cpptestcc.compiler gcc_9-64
+# cpptestcc.workspace <WORKSPACE_LOCATION>
+
+cpptestcc.lineCoverage true
+# cpptestcc.functionCoverage true
+# cpptestcc.statementCoverage true
+# cpptestcc.blockCoverage true
+# cpptestcc.pathCoverage true
+cpptestcc.decisionCoverage true
+# cpptestcc.simpleConditionCoverage true
+cpptestcc.mcdcCoverage true
+# cpptestcc.callCoverage true
+
+cpptestcc.disableAutoRecoveryMode true
+# cpptestcc.templateCoverage false
+# cpptestcc.coverageDataVariants false
+
+# cpptestcc.include <INCLUDE_FILE_PATH>
+# cpptestcc.exclude <EXCLUDE_FILE_PATH>
+# cpptestcc.ignore <IGNORE_FILE_PATH>
+
+# only include application/library code in coverage calculations
+cpptestcc.exclude regex:*
+cpptestcc.include regex:**/ApplicationLib/**
+
+

@@ -5,12 +5,18 @@
 
 
 # common variables
+# - C/C++test installation locations
 CPPTEST_PRO_HOME=${HOME}/parasoft/cpptest-pro-2022.2.0
 CPPTEST_STD_HOME=${HOME}/parasoft/cpptest-std-2022.2.0
+
+# cpptestcc coverage engine
 CPPTESTCC=${CPPTEST_STD_HOME}/bin/cpptestcc
 # CPPTESTCC=${CPPTEST_PRO_HOME}/bin/cpptestcc
 CPPTESTCC_WORKSPACE=`pwd`
-CPPTESTCC_FLAGS="-compiler gcc_9-64 -line-coverage -mcdc-coverage -decision-coverage -workspace ${CPPTESTCC_WORKSPACE}"
+
+# cpptestcc coverage engine settings (quiet by default, add -verbose for more output)
+# CPPTESTCC_FLAGS="-compiler gcc_9-64 -line-coverage -mcdc-coverage -decision-coverage -workspace ${CPPTESTCC_WORKSPACE}"
+CPPTESTCC_FLAGS="-psrc `pwd`/cpptestcc.psrc -workspace ${CPPTESTCC_WORKSPACE}"
 
 
 # sanity check - this just builds and runs tests in verbose mode, no C/C++test
@@ -40,12 +46,12 @@ rm -f ./cpptest_results.clog
 # instrument for coverage and run tests 
 # - prefix compiler with cpptestcc command line - this will instrument for coverage
 # - add C/C++test runtime library to linker command line to add coverage API implementation
-#   try LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS, or "+= ${CPPTEST_RT_LIB} in the makefile
-# for this project setting LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS simply works
+#   try LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS, or "+= ${CPPTEST_RT_LIB} in the makefile;
+#   for this project setting LDFLAGS or CPPUTEST_ADDITIONAL_LDFLAGS simply works
 make clean all SILENCE= CPPUTEST_EXE_FLAGS=-v \
   CC="${CPPTESTCC} ${CPPTESTCC_FLAGS} -- gcc" \
   CXX="${CPPTESTCC} ${CPPTESTCC_FLAGS} -- g++" \
-  LDFLAGS=${CPPTEST_RT_LIB}
+  CPPUTEST_ADDITIONAL_LDFLAGS=${CPPTEST_RT_LIB}
 
 
 # the result will be a new coverage cache and runtime coverage data from the tests (.clog file)
@@ -89,5 +95,18 @@ $CPPTEST_STD_HOME/cpptestcli \
     $*
 ls -lart ./reports
 
+
+# TODO:
+# + setup example project and automate running CppUTests
+# + create C/C++test runtime library if needed
+# + instrument builds with cpptestcc
+# + generate coverage reports with C/C++test Standard
+# - generate unit test reports with C/C++test Standard
+# - collect coverage from application code (exclusions)
+# - generate reports for advanced coverage metrics with C/C++test Professional
+# - send results to DTP
+# - add another folder with more CppUTests build as a separate executable
+# - collect coverage from the new folder
+# - merge coverage from both tests
 
 
