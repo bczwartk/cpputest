@@ -11,6 +11,7 @@
 # - C/C++test installation locations
 CPPTEST_PRO_HOME=${HOME}/parasoft/cpptest-pro-2022.2.0
 CPPTEST_STD_HOME=${HOME}/parasoft/cpptest-std-2022.2.0
+DTP_PUBLISH=-publish
 
 # cpptestcc coverage engine
 CPPTESTCC=${CPPTEST_STD_HOME}/bin/cpptestcc
@@ -20,6 +21,9 @@ CPPTESTCC_WORKSPACE=`pwd`
 # cpptestcc coverage engine settings (quiet by default, add -verbose for more output)
 # CPPTESTCC_FLAGS="-compiler gcc_9-64 -line-coverage -mcdc-coverage -decision-coverage -workspace ${CPPTESTCC_WORKSPACE}"
 CPPTESTCC_FLAGS="-psrc `pwd`/cpptestcc.psrc -workspace ${CPPTESTCC_WORKSPACE}"
+
+# build ID to tag results separately for each run
+BUILD_ID="CppUTestExample_`date +%Y%m%d%H%M`"
 
 
 # sanity check - this just builds and runs tests in verbose mode, no C/C++test
@@ -80,10 +84,12 @@ if [ -f ./cpptest_results.clog ] ; then
         -workspace ${CPPTESTCC_WORKSPACE} \
         -input ./cpptest_results.clog \
         -input ./cpptest_results.utlog \
-        -module . \
+        -module CppUTestExample=`pwd` \
         -config "builtin://Unit Testing" \
-        -property dtp.project=CppUTestExamples \
-        -report ./reports_std
+        -property dtp.project=CppUTest \
+        -property build.id=${BUILD_ID} \
+        -report ./reports_std \
+        ${DTP_PUBLISH}
     ls -lart ./reports_std
 fi
 
@@ -91,6 +97,8 @@ fi
 # generate advanced coverage reports
 # note: this requires C/C++test Professional and Eclipse project
 # note: this will *not* generate CppUTest test reports (see Standard above)
+# note: instead of builtin test config to load coverage ('builtin://Load Application Coverage')
+#       we use a custom one that only includes the selected coverage metrics
 if [ -f ./cpptest_results.clog ] ; then
     # Eclipse workspace must be outside of the project folder (where .project is located)
     DATA_DIR=`pwd`/../cpptest_wksp
@@ -99,11 +107,13 @@ if [ -f ./cpptest_results.clog ] ; then
     ${CPPTEST_PRO_HOME}/cpptestcli \
         -data ${DATA_DIR} \
         -import `pwd` \
-        -config 'builtin://Load Application Coverage' \
+        -config "`pwd`/../parasoft/Load Application Coverage CppUTest.properties" \
         -showdetails -appconsole stdout \
         -report reports_pro \
         -settings `pwd`/../parasoft/cpptest.properties \
-        -property dtp.project=CppUTest
+        -property dtp.project=CppUTest \
+        -property build.id=${BUILD_ID} \
+        ${DTP_PUBLISH}
     ls -lart ./reports_pro
 fi
 
@@ -111,6 +121,7 @@ fi
 
 
 # TODO:
+# MVP:
 # + setup example project and automate running CppUTests
 # + create C/C++test runtime library if needed
 # + instrument builds with cpptestcc
@@ -119,8 +130,9 @@ fi
 #   + add C/C++test test listener to the unit tests (enabled via #ifdef's)
 #   + enable C/C++test test listener during the build
 # + collect coverage from application code only (exclusions)
-# - generate reports for advanced coverage metrics with C/C++test Professional
-# - send results to DTP
+# + generate reports for advanced coverage metrics with C/C++test Professional
+# + send results to DTP
+# OPTIONAL:
 # - add another folder with more CppUTests build as a separate executable
 # - collect coverage from the new folder
 # - merge coverage from both tests

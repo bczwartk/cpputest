@@ -1,5 +1,5 @@
 *.clog
-*.clog
+*.utlog
 .cpptest/
 build_cpputest/
 cpptest-runtime/
