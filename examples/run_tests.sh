@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
 # Script to perform make-based build and run of CppUTest examples
-# and to generate C/C++test coverage reports.
+# and to generate C/C++test coverage reports - all automated from the CLI.
 # It should be run in cpputest/examples folder.
 # Assumes that CppUTest library was already built and is available in ../lib.
 # See ../parasoft/build_cpputest.sh.
@@ -67,7 +67,6 @@ make clean all \
     CPPUTEST_CFLAGS="-DPARASOFT_CPPTEST=1 -I${CPPTEST_RT}/include" \
     CPPUTEST_CXXFLAGS="-DPARASOFT_CPPTEST=1 -I${CPPTEST_RT}/include" \
 
-
 # the result will be a new coverage cache and runtime coverage data from the tests (.clog file)
 ls -l ${CPPTESTCC_WORKSPACE}/.cpptest
 ls -l ./cpptest_results.clog
@@ -120,7 +119,6 @@ fi
 
 
 
-# TODO:
 # MVP:
 # + setup example project and automate running CppUTests
 # + create C/C++test runtime library if needed
@@ -130,8 +128,10 @@ fi
 #   + add C/C++test test listener to the unit tests (enabled via #ifdef's)
 #   + enable C/C++test test listener during the build
 # + collect coverage from application code only (exclusions)
+# + load coverage into C/C++test Professional GUI
 # + generate reports for advanced coverage metrics with C/C++test Professional
 # + send results to DTP
+# TODO:
 # OPTIONAL:
 # - add another folder with more CppUTests build as a separate executable
 # - collect coverage from the new folder
